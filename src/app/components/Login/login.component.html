@@ -1,0 +1,74 @@
+<div class="image-fondo" style="background-repeat: no-repeat;">
+
+    <div class=" paddings ">
+        <br><br>
+        <img class="img-fluid rounded mx-auto d-block " src="../../assets/image/logoT.png " alt="clicksoft " width="70% " height="70% " />
+        <br />
+        <br />
+
+        <form (ngSubmit)=" login(f)" #f="ngForm">
+            <div class="form-group row ">
+                <label for="staticEmail " class="col-sm-2 col-form-label ">Email</label>
+                <div class="col-sm-10 ">
+                    <input [(ngModel)]="usuarioLogin.correo" type="text " class="form-control textarea " name="correo" id="correo" placeholder="Ingrese su email " required>
+                </div>
+            </div>
+            <div class="form-group row ">
+                <label for="inputPassword " class="col-sm-2 col-form-label ">Contraseña</label>
+                <div class="col-sm-10 ">
+                    <input [(ngModel)]="usuarioLogin.password" type="password" class="form-control " name="contraseña" id="contraseña" placeholder="Ingrese su contraseña " required>
+                </div>
+            </div>
+
+            <div class="form-group form-check custom-control custom-checkbox ">
+                <input type="checkbox " class="form-check-input custom-control-input " id="recordar " name="recordar " />
+                <label class="custom-control-label " for="recordar ">Recordarme</label>
+
+
+
+                <a href="# " class="float-right negro " data-target="#recuperarContraseña " data-toggle="modal" data-whatever="@mdo">Olvidé la contraseña</a>
+
+
+
+            </div>
+
+            <button type="submit " class="btn btn-dark mb-2 ">
+                Iniciar Sesion
+            </button>
+
+        </form>
+
+
+        <!--Formulario modal Recuperar contraseña-->
+
+        <div class="modal fade" data-backdrop="static" data-keyboard="false" id="recuperarContraseña" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bgCorp">
+                        <a></a>
+                        <h2 id="exampleModalLabel">
+                            Recuperar contraseña
+                        </h2>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">Ingrese su correo electronico</label>
+                                <input type="text" class="form-control" id="nombre" />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn estilosBotonesHover estilosBotones">
+        Enviar
+      </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

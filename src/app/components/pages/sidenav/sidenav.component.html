@@ -1,0 +1,123 @@
+<div class="example-container" [class.example-is-mobile]="mobileQuery.matches" *ngIf="shouldRun">
+    <mat-toolbar class="vertical-menu">
+        <button class="button" mat-icon-button (click)="snav.toggle()"><mat-icon class="button">menu</mat-icon></button>
+        <div class="paddings">
+            <img class="img-fluid rounded mx-auto d-block " src="../../assets/image/logoBlanco.png " alt="clicksoft " width="100% " height="100% " />
+        </div>
+    </mat-toolbar>
+
+    <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+            <mat-nav-list>
+                <div class="btn-group">
+                    <button type="button" class=" form-control btn dropdown-toggle " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Accesorios
+                    </button>
+                    <div class="dropdown-menu">
+                        <a [routerLink]="['/Accesorios']">Tabla de Accesorios</a>
+
+
+                    </div>
+                </div>
+
+
+                <br><br>
+                <div class="btn-group">
+
+                    <button type="button" class="form-control btn  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Mobiliario
+                    </button>
+                    <div class="dropdown-menu">
+                        <a [routerLink]="['/Mobiliario']">Tabla de mobiliario</a>
+
+                    </div>
+                </div>
+                <br><br>
+
+                <div class="btn-group">
+
+                    <button type="button" class="form-control btn  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Comunicacion
+                  </button>
+                    <div class="dropdown-menu">
+                        <a [routerLink]="['/Comunicacion']">Tabla de comunicacion</a>
+
+                    </div>
+                </div>
+                <br><br>
+
+                <div class="btn-group">
+
+                    <button type="button" class="form-control btn  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Hardware
+                    </button>
+                    <div class="dropdown-menu">
+                        <a [routerLink]="['/Hardware']">Tabla de hardware</a>
+
+                    </div>
+                </div>
+                <br><br>
+
+                <div class="btn-group">
+
+                    <button type="button" class="form-control btn  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Papeleria
+                    </button>
+                    <div class="dropdown-menu">
+                        <a [routerLink]="['/Papeleria']">Tabla de papeleria</a>
+
+                    </div>
+                </div>
+                <br><br>
+
+                <div class="btn-group">
+
+                    <button type="button" class="form-control btn  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Limpieza
+                    </button>
+                    <div class="dropdown-menu">
+                        <a [routerLink]="['/Limpieza']">Tabla de limpieza</a>
+
+                    </div>
+                </div>
+                <br><br>
+
+                <div class="btn-group">
+
+                    <button type="button" class="form-control btn  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Insumos
+                    </button>
+                    <div class="dropdown-menu">
+                        <a [routerLink]="['/Insumos']">Tabla de insumos</a>
+
+                    </div>
+                </div>
+
+                <br><br>
+                <div class="btn-group">
+
+                    <button type="button" class="form-control btn  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Personal
+                    </button>
+                    <div class="dropdown-menu">
+                        <a [routerLink]="['/Personal']">Tabla de personal</a>
+
+                    </div>
+                </div>
+                <br><br><br><br><br>
+                <button type="button" class="btn btn-outline-danger btn-lg btn-block"> <a [routerLink]="['/Login']">Salir</a></button>
+
+            </mat-nav-list>
+        </mat-sidenav>
+
+        <mat-sidenav-content>
+            <app-dashboard></app-dashboard>
+            <router-outlet></router-outlet>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+
+
+</div>
+
+
+<div *ngIf="!shouldRun">Please open on Stackblitz to see result</div>

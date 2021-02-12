@@ -1,0 +1,41 @@
+.paddings {
+    padding-left: 30%;
+    padding-right: 30%;
+    padding-top: 7%;
+}
+
+.cs {
+    background-image: url("src\assets\image\logo.jpeg");
+}
+
+.image-fondo {
+    background-image: url("src\assets\image\ar.png");
+}
+
+.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+    background-color: rgb(229, 181, 58);
+}
+
+.custom-checkbox .custom-control-input:checked:focus~.custom-control-label::before {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(229, 181, 58, 0.6)
+}
+
+.custom-checkbox .custom-control-input:focus~.custom-control-label::before {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 0.2rem rgba(0, 0, 0, 0.25)
+}
+
+.custom-checkbox .custom-control-input:active~.custom-control-label::before {
+    background-color: #C8FFC8;
+}
+
+.negro {
+    color: black;
+}
+
+textarea:focus,
+input:focus,
+input[type]:focus {
+    border-color: rgb(229, 181, 58);
+    box-shadow: 0 1px 1px rgba(229, 103, 23, 0.075)inset, 0 0 8px rgba(229, 181, 58, 0.6);
+    outline: 0 none;
+}
