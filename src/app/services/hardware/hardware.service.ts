@@ -47,6 +47,15 @@ export class HardwareService {
     );
   }
 
+  buscarHardware(termino: string){
+    return this.http.get(URL_SERVICIOS + 'hardware/buscar/' + termino).pipe(
+      map((resp: any) => {        
+
+        return resp.hardware;
+      })
+    );
+  }
+
   // tslint:disable-next-line: typedef
   eliminaHardware(id: string){
     return this.http.delete(URL_SERVICIOS + 'hardware/' + id).pipe(
@@ -60,4 +69,17 @@ export class HardwareService {
       })
     );
   }
+
+  actualizaHardware(harwware: Hardware){
+    console.log(harwware);
+    return this.http.put(URL_SERVICIOS + 'hardware/' + harwware.id_hardware, harwware).pipe(
+      map((resp: any) => {
+        Swal.fire("Hardware actualizado", harwware.id_hardware, "success");
+        
+        
+        return  true;
+      })
+    );
+  }
+
 }

@@ -2,6 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { Mobiliario } from 'src/app/models/mobiliario';
 import { MobiliarioService } from '../../../services/mobiliario/mobiliario.service';
 import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
 import {NgForm } from '@angular/forms';
 import { ServiciosService } from '../../../services/servicios/servicios.service';
 import { ProveedorService } from '../../../services/proveedor/proveedor.service';
@@ -129,10 +130,7 @@ import {Servicios} from 'src/app/models/servicios';
         return;    
       } 
       // console.log(this.nuevoAccesorio);   
-      this._mobService.crearMobiliario(this.nuevoMobiliario).subscribe(
-        resultado =>{      
-        }
-        );  
+      this._mobService.crearMobiliario(this.nuevoMobiliario).subscribe( () => this.cargarMobiliario());  
     }
   
     crearServicio(form : NgForm){
@@ -184,6 +182,52 @@ import {Servicios} from 'src/app/models/servicios';
           Swal.fire('Cancelado','','info');
         }
       });
+    }
+
+    actualizarMobiliario(form : NgForm){
+
+      if(form.invalid){
+        console.log("Formularo invalido");
+        
+      }   
+       
+    this._mobService.actualizaMobiliario(this.editMobiliario).subscribe(  () => this.cargarMobiliario());
+  
+    console.log(this.editMobiliario);
+    
+      }
+
+      obtenerMobUni(mobiliario:  Mobiliario){
+        this.editMobiliario = mobiliario;
+
+        if(this.editMobiliario.mob_fecha_asignacion == "No registrado"){
+
+          this.editMobiliario.mob_fecha_asignacion = null;
+        }
+        // console.log(this.editMobiliario);
+        
+    
+    }
+
+    generarExcel(){
+      const workBook = XLSX.utils.book_new(); // create a new blank book
+      const workSheet = XLSX.utils.json_to_sheet(this.mobiliarios);
+  
+      XLSX.utils.book_append_sheet(workBook, workSheet, 'Mobiliarios'); // add the worksheet to the book
+      let fecha = new Date().getDate() + '-' + new Date().getMonth()+1 + '-' + new Date().getFullYear();
+      let nombre = fecha + '.xlsx'
+      XLSX.writeFile(workBook, nombre); // initiate a file download in browser
+    }
+
+    buscarMobiliario(termino: string) {
+      if (termino.length <= 0) {
+        this.cargarMobiliario();
+        return;
+      }           
+      this._mobService.buscarMobiliario(termino)
+        .subscribe((mobiliario: Mobiliario[]) => this.mobiliarios = mobiliario);
+    
+  
     }
   }
 

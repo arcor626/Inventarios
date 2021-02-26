@@ -2,6 +2,8 @@ import { Component, OnInit} from '@angular/core';
 import { Hardware } from 'src/app/models/hardware';
 import { HardwareService } from '../../../services/hardware/hardware.service';
 import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
+
 import {NgForm } from '@angular/forms';
 import { ServiciosService } from '../../../services/servicios/servicios.service';
 import { ProveedorService } from '../../../services/proveedor/proveedor.service';
@@ -65,9 +67,9 @@ import {Servicios} from 'src/app/models/servicios';
   
     }
 
+
     encargadoAnteSeleccionado(id: number){
-      this.nuevoHardware.fk_id_encargado = id.toString();   
-      this.editHardware.fk_id_encargado = id.toString();   
+      this.editHardware.fk_id_encarg_ante = id.toString();   
   
     }
   
@@ -132,10 +134,7 @@ import {Servicios} from 'src/app/models/servicios';
         return;
       } 
       // console.log(this.nuevoAccesorio);   
-      this._hwdService.crearHardware(this.nuevoHardware).subscribe(
-        resultado =>{      
-        }
-        );  
+      this._hwdService.crearHardware(this.nuevoHardware).subscribe( () => this.cargarHardware());  
     }
   
     crearServicio(form : NgForm){
@@ -188,4 +187,54 @@ import {Servicios} from 'src/app/models/servicios';
         }
       });
     }
+
+    actualizarHardware(form : NgForm){
+
+      if(form.invalid){
+        console.log("Formularo invalido");
+        
+      }   
+       
+    this._hwdService.actualizaHardware(this.editHardware).subscribe(  () => this.cargarHardware());
+  
+    console.log(this.editHardware);
+    
+      }
+  
+  
+  
+  
+      obtenerHwdUni(hardware:  Hardware){
+            this.editHardware = hardware;
+  
+            if(this.editHardware.hwd_fecha_asignacion == "No registrado"){
+  
+              this.editHardware.hwd_fecha_asignacion = null;
+            }
+            console.log(this.editHardware);
+            
+        
+        }
+
+    generarExcel(){
+      const workBook = XLSX.utils.book_new(); // create a new blank book
+      const workSheet = XLSX.utils.json_to_sheet(this.hardwares);
+  
+      XLSX.utils.book_append_sheet(workBook, workSheet, 'Hardware'); // add the worksheet to the book
+      let fecha = new Date().getDate() + '-' + new Date().getMonth()+1 + '-' + new Date().getFullYear();
+      let nombre = fecha + '.xlsx'
+      XLSX.writeFile(workBook, nombre); // initiate a file download in browser
+    }
+
+    buscarHardware(termino: string) {
+      if (termino.length <= 0) {
+        this.cargarHardware();
+        return;
+      }           
+      this._hwdService.buscarHardware(termino)
+        .subscribe((hardware: Hardware[]) => this.hardwares = hardware);
+    
+  
+    }
+
   }

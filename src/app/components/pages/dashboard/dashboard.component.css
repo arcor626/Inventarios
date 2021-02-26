@@ -1,3 +1,9 @@
 .cs {
     background-image: url("src\assets\image\logo.jpeg");
 }
+
+.pp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

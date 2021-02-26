@@ -43,6 +43,15 @@ export class PersonalService {
     );
     }
 
+    buscarPersonal(termino: string){
+      return this.http.get(URL_SERVICIOS + 'personal/buscar/' + termino).pipe(
+        map((resp: any) => {        
+  
+          return resp.personal;
+        })
+      );
+    }
+
     eliminaPersonal(id: string){
       return this.http.delete(URL_SERVICIOS + 'personal/' + id).pipe(
         map((resp: any) => {
@@ -51,6 +60,18 @@ export class PersonalService {
             "Personal eliminado correctamente",
             "success"
           )
+          return  true;
+        })
+      );
+    }
+
+    actualizaPersonal(personal: Personal){
+      console.log(personal);
+      return this.http.put(URL_SERVICIOS + 'personal/' + personal.id_personal, personal).pipe(
+        map((resp: any) => {
+          Swal.fire("Personal actualizado", personal.personal_nombre + " " + personal.personal_apellidos, "success");
+          
+          
           return  true;
         })
       );

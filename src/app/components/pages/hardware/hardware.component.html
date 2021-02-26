@@ -2,9 +2,10 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <button type="button" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
-              </svg> Descargar a excel</button>
+
+            <form class="form-inline my-2 my-lg-0">
+                <input #input (keyup)="buscarHardware(input.value)" class="form-control me-5" type="search" placeholder="Buscar" aria-label="Search">
+            </form>
 
         </div>
         <div class="col">
@@ -41,11 +42,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let hardware of hardwares | paginate: { itemsPerPage: 6, currentPage: page }">
-
-                <td><button type="button" class="btn btn-outline-dark"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pen" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <tr *ngFor="let hardware of hardwares | paginate: { itemsPerPage: 10, currentPage: page }">
+                <a href="# " class="float-right negro " data-target="#actuHwd " data-toggle="modal" data-whatever="@mdo">
+                    <td><button (click)="obtenerHwdUni(hardware)" type="button" class="btn btn-outline-dark"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pen" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M13.498.795l.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
               </svg></button></td>
+                </a>
 
                 <td><button (click)="eliminarHardware(hardware)" type="button" class="btn btn-outline-danger"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
@@ -60,10 +62,14 @@
                 <td>{{hardware.hwd_ram}}</td>
                 <td>{{hardware.nombre_encargado}}</td>
                 <td>{{hardware.nombre_encargado_anterior}}</td>
-                <td>{{hardware.hwd_fecha_compra}}</td>
-                <td>{{hardware.hwd_fecha_asignacion}}</td>
+                <td *ngIf="hardware.hwd_fecha_compra == 'No registrado'">{{hardware.hwd_fecha_compra}} </td>
+                <td *ngIf="hardware.hwd_fecha_compra !== 'No registrado'">{{hardware.hwd_fecha_compra | date}} </td>
+                <td *ngIf="hardware.hwd_fecha_asignacion == 'No registrado'">{{hardware.hwd_fecha_asignacion}} </td>
+                <td *ngIf="hardware.hwd_fecha_asignacion !== 'No registrado'">{{hardware.hwd_fecha_asignacion|date}} </td>
+
                 <td>{{hardware.area_nombre}}</td>
                 <td>{{hardware.hwd_comentarios}}</td>
+                <td>{{hardware.hwd_status}}</td>
 
             </tr>
         </tbody>
@@ -71,6 +77,10 @@
     <pagination-controls (pageChange)="page = $event" previousLabel="«" nextLabel="»" class="color" class="custom-pagination pp"></pagination-controls>
 
 </div>
+
+<button (click)="generarExcel()" type="button" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
+  </svg> Descargar a excel</button>
 
 <!-- modal agregar accesorio -->
 
@@ -89,7 +99,7 @@
             <div class="modal-body">
                 <form (ngSubmit)="crearHardware(f)" #f="ngForm">
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Ingresa el ID</label>
+                        <label for="recipient-name" class="col-form-label">Ingresa el ID*</label>
                         <input type="text" class="form-control textarea " id="id_hardware" name="id_hardware" [(ngModel)]="nuevoHardware.id_hardware" required/>
                         <small *ngIf="f.submitted && f.controls['id_hardware'].errors " class="text-danger">
                             Campo obligatorio
@@ -100,11 +110,10 @@
                         <input type="text" class="form-control" id="numero_serie" name="numero_serie" [(ngModel)]="nuevoHardware.hwd_num_serie" />
 
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Selecciona el elemento</label>
+                            <label for="recipient-name" class="col-form-label">Selecciona el elemento*</label>
                             <!-- <select (change)="servicioSeleccionado($event.target.value)" class="custom-select" id="elementos" name="elementos"> -->
                             <select class="form-control" id="elementos" name="elementos" [(ngModel)]="nuevoHardware.fk_id_servicio">
 
-                            <option selected>Selecciona un elemento...</option>
 
                             <option *ngFor="let servicio of servicios" 
                                 [value]="servicio.id_servicio">{{servicio.serv_nombre}}
@@ -122,7 +131,7 @@
 
 
                         <!-- <input type="text" class="form-control" id="id_servicio" name="id_servicio" [(ngModel)]="nuevoAccesorio.fk_id_servicio" /> -->
-                        <label for="recipient-name" class="col-form-label">Ingrese especificaciones </label>
+                        <label for="recipient-name" class="col-form-label">Ingrese especificaciones* </label>
                         <input type="text" class="form-control" id="especificaciones" name="especificaciones" [(ngModel)]="nuevoHardware.hwd_especificaciones" required />
                         <small *ngIf="f.submitted && f.controls['especificaciones'].errors " class="text-danger">
                             Campo obligatorio
@@ -130,11 +139,10 @@
                         </small>
 
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Ingrese proveedor</label>
+                            <label for="recipient-name" class="col-form-label">Seleccione un proveedor*</label>
                             <!-- <select (change)="proveedorSeleccionado($event.target.value)" class="custom-select" id="inputGroupSelect02" name="proveedor"> -->
                             <select class="form-control" id="proveedor" name="proveedor" [(ngModel)]="nuevoHardware.fk_id_proveedor">
                            
-                            <option selected>Selecciona un proveedor...</option>
 
                             <option *ngFor="let prove of proveedor" value="{{prove.id_proveedor}}" >{{prove.nombre_proveedor}}</option>
                            
@@ -146,14 +154,14 @@
                         </div>
                         <a href="# " class="float-right negro " data-target="#addProve" data-toggle="modal" data-whatever="@mdo">Agregar nuevo proveedor</a>
 
-                        <label for="recipient-name" class="col-form-label">Ingresa procesador</label>
+                        <label for="recipient-name" class="col-form-label">Ingresa procesador*</label>
                         <input type="text" class="form-control" id="procesador" name="procesador" [(ngModel)]="nuevoHardware.hwd_procesador" required />
                         <small *ngIf="f.submitted && f.controls['procesador'].errors " class="text-danger">
                             Campo obligatorio
                             <br> 
                         </small>
 
-                        <label for="recipient-name" class="col-form-label">Ingresa RAM</label>
+                        <label for="recipient-name" class="col-form-label">Ingresa RAM*</label>
                         <input type="text" class="form-control" id="ram" name="ram" [(ngModel)]="nuevoHardware.hwd_ram" required/>
                         <small *ngIf="f.submitted && f.controls['ram'].errors " class="text-danger">
                             Campo obligatorio
@@ -163,11 +171,10 @@
                         <!-- <input type="text" class="form-control" id="provedor" name="provedor" [(ngModel)]="nuevoAccesorio.fk_id_proveedor" /> -->
                         <div class="form-group">
 
-                            <label for="recipient-name" class="col-form-label">Ingrese su encargado</label>
+                            <label for="recipient-name" class="col-form-label">Seleccione su encargado*</label>
                             <!-- <select (change)="encargadoSeleccionado($event.target.value)" class="custom-select" id="inputGroupSelect03" name="encargado"> -->
                             <select class="form-control" id="encargado" name="encargado" [(ngModel)]="nuevoHardware.fk_id_encargado">
                             
-                            <option selected>Selecciona un encargado...</option>
 
                             <option *ngFor="let per of personal " value ="{{per.id_personal}}" >{{per.personal_nombre}} {{per.personal_apellidos}}</option>
                            
@@ -178,7 +185,7 @@
                         </small>
                         </div>
 
-                        <label for="recipient-name" class="col-form-label">Ingrese la fecha de compra</label>
+                        <label for="recipient-name" class="col-form-label">Ingrese la fecha de compra*</label>
                         <input type="date" class="form-control" id="fecha_compra" name="fecha_compra" [(ngModel)]="nuevoHardware.hwd_fecha_compra" required/>
                         <small *ngIf="f.submitted && f.controls['fecha_compra'].errors " class="text-danger">
                             Campo obligatorio
@@ -190,11 +197,10 @@
                          -->
                         <div class="form-group">
 
-                            <label for="recipient-name" class="col-form-label">Ingrese el id de area </label>
+                            <label for="recipient-name" class="col-form-label">Seleccione el area* </label>
                             <!-- <select (change)="areaSeleccionada($event.target.value)" class="custom-select" id="inputGroupSelect04" name="area"> -->
                             <select class="form-control" id="area" name="area" [(ngModel)]="nuevoHardware.fk_id_area">
                             
-                            <option selected>Selecciona un area...</option>
 
                             <option *ngFor="let are of areas" value="{{are.id_area}}" >{{are.area_nombre}}</option>
                            
@@ -215,6 +221,9 @@
                             </button>
 
                         </div>
+
+                        <label for="recipient-name" class="col-form-label">Campos obligatorios*</label>
+
                     </div>
 
                 </form>
@@ -233,7 +242,7 @@
             <div class="modal-header bgCorp">
                 <a></a>
                 <h2 id="exampleModalLabel">
-                    Agregar Servicio
+                    Agregar Elemento
                 </h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -243,7 +252,7 @@
                 <div class="form-group">
 
                     <form (ngSubmit)="crearServicio(f)" #fEle="ngForm">
-                        <label for="recipient-name" class="col-form-label">Ingresa el servicio</label>
+                        <label for="recipient-name" class="col-form-label">Ingresa el nommbre del elemento*</label>
                         <input type="text" class="form-control" id="serv_nombre" name="serv_nombre" [(ngModel)]="nuevoServicio.serv_nombre" required/>
 
                         <small *ngIf="fEle.submitted && fEle.controls['serv_nombre'].errors " class="text-danger">
@@ -285,7 +294,7 @@
                 <div class="form-group">
 
                     <form (ngSubmit)="crearProveedor(f)" #fProv="ngForm">
-                        <label for="recipient-name" class="col-form-label">Ingresa el proveedor</label>
+                        <label for="recipient-name" class="col-form-label">Ingresa el nombre del proveedor</label>
                         <input type="text" class="form-control" id="nombre_proveedor" name="nombre_proveedor" [(ngModel)]="nuevoProveedor.nombre_proveedor" required/>
 
                         <small *ngIf="fProv.submitted && fProv.controls['nombre_proveedor'].errors " class="text-danger">
@@ -301,6 +310,119 @@
 
                     </form>
                 </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- modal actualizar accesorio -->
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="actuHwd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bgCorp">
+                <a></a>
+                <h2 id="exampleModalLabel">
+                    Actualizar hardware
+                </h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="actualizarHardware(fHwd)" #fHwd="ngForm">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">ID del hardware</label>
+                        <input type="text" disabled value="{{editHardware.id_hardware}}" class="form-control" id="id_hardware_Hwd" name="id_hardware_Hwd" [(ngModel)]="editHardware.id_hardware" />
+                        <label for="recipient-name" class="col-form-label">Ingresa numero de serie</label>
+                        <input type="text" value="{{editHardware.hwd_num_serie}}" class="form-control" id="numero_serie_Hwd" name="numero_serie_Hwd" [(ngModel)]="editHardware.hwd_num_serie" />
+                        <label for="recipient-name" class="col-form-label">Selecciona el elemento</label>
+                        <select (change)="servicioSeleccionado($event.target.value)" class="custom-select" id="inputGroupSelect01Acc">
+                            <option value="editHardware.fk_id_servicio" selected>{{editHardware.serv_nombre}}</option>
+
+                            <option *ngFor="let servicio of servicios" [value]="servicio.id_servicio">
+                                {{servicio.serv_nombre}}
+                            </option>
+                           
+                        </select>
+                        <a href="# " class="float-right negro " data-target="#addServ" data-toggle="modal" data-whatever="@mdo">Agregar nuevo servicio</a>
+
+
+
+                        <!-- <input type="text" class="form-control" id="id_servicio" name="id_servicio" [(ngModel)]="nuevoAccesorio.fk_id_servicio" /> -->
+                        <label for="recipient-name" class="col-form-label">Ingrese especificaciones </label>
+                        <input type="text" value="{{editHardware.hwd_especificaciones}}" class="form-control" id="especificaciones_Hwd" name="especificaciones_Hwd" [(ngModel)]="editHardware.hwd_especificaciones" />
+                        <label for="recipient-name" class="col-form-label">Ingrese proveedor</label>
+                        <select (change)="proveedorSeleccionado($event.target.value)" class="custom-select" id="inputGroupSelect02Acc">
+                            <option value="editHardware.fk_id_proveedor" selected>{{editHardware.nombre_proveedor}}</option>
+
+                            <option *ngFor="let prove of proveedor" value="{{prove.id_proveedor}}" >{{prove.nombre_proveedor}}</option>
+                           
+                          </select>
+
+                        <label for="recipient-name" class="col-form-label">Ingrese procesador </label>
+                        <input type="text" value="{{editHardware.hwd_procesador}}" class="form-control" id="procesador_Hwd" name="procesador_Hwd" [(ngModel)]="editHardware.hwd_procesador" />
+                        <label for="recipient-name" class="col-form-label">Ingrese RAM </label>
+                        <input type="text" value="{{editHardware.hwd_ram}}" class="form-control" id="ram_Hwd" name="ram_Hwd" [(ngModel)]="editHardware.hwd_ram" />
+
+                        <!-- <input type="text" class="form-control" id="provedor" name="provedor" [(ngModel)]="nuevoAccesorio.fk_id_proveedor" /> -->
+                        <label for="recipient-name" class="col-form-label">Ingrese su encargado</label>
+                        <select (change)="encargadoSeleccionado($event.target.value)" class="custom-select" id="inputGroupSelect03Acc">
+                            <option value="editHardware.fk_id_encargado" selected>{{editHardware.nombre_encargado}}</option>
+
+                            <option *ngFor="let per of personal " value ="{{per.id_personal}}" >{{per.personal_nombre}} {{per.personal_apellidos}}</option>
+                           
+                          </select>
+
+                        <label for="recipient-name" class="col-form-label">Ingrese su encargado anterior</label>
+                        <select (change)="encargadoAnteSeleccionado($event.target.value)" class="custom-select" id="inputGroupSelect04Acc">
+                              <option value="editHardware.fk_id_encarg_ante" selected>{{editHardware.nombre_encargado_anterior}}</option>
+  
+                              <option *ngFor="let per of personal " value ="{{per.id_personal}}" >{{per.personal_nombre}} {{per.personal_apellidos}}</option>
+                             
+                            </select>
+                        <!-- <input type="text" class="form-control" id="encargado" name="encargado" [(ngModel)]="nuevoAccesorio.fk_id_encargado" /> -->
+                        <label for="recipient-name" class="col-form-label">Fecha de compra</label>
+                        <input type="date" value="{{editHardware.hwd_fecha_compra}}" class="form-control" id="fecha_compra_Hwd" name="fecha_compra_Hwd" [(ngModel)]="editHardware.hwd_fecha_compra" disabled/>
+                        <label for="recipient-name" class="col-form-label">Ingrese la fecha de asignacion</label>
+                        <input type="date" value="{{editHardware.hwd_fecha_asignacion}}" class="form-control" id="fecha_asignacion_Hwd" name="fecha_asignacion_Hwd" [(ngModel)]="editHardware.hwd_fecha_asignacion" />
+                        <label for="recipient-name" class="col-form-label">Ingrese el id de area </label>
+                        <select (change)="areaSeleccionada($event.target.value)" class="custom-select" id="inputGroupSelect05Acc">
+                            <option value="editHardware.area_nombre" selected>{{editHardware.area_nombre}}</option>
+
+                            <option *ngFor="let are of areas" value="{{are.id_area}}" >{{are.area_nombre}}</option>
+                           
+                          </select>
+                        <!-- <input type="text" class="form-control" id="id_area" name="id_area" [(ngModel)]="nuevoAccesorio.fk_id_area" /> -->
+                        <label for="recipient-name" class="col-form-label">Ingrese comentarios</label>
+                        <input type="text" value="{{editHardware.hwd_comentarios}}" class="form-control" id="comentarios_Hwd" name="comentarios_Hwd" [(ngModel)]="editHardware.hwd_comentarios" />
+
+                        <label for="recipient-name" class="col-form-label">Status</label>
+                        <select (change)="statusSeleccionado($event.target.value)" class="custom-select" id="inputGroupSelect05Acc">
+                            <option value="editHardware.hwd_status" selected>{{editHardware.hwd_status}}</option>
+
+                            <option  value="Activo" >Activo</option>
+                            <option  value="Inactivo" >Inactivo</option>
+                            <option  value="Extraviado" >Extraviado</option>
+                            <option  value="Baja" >Baja</option>
+
+                           
+                          </select>
+                        <!-- <input type="text" value="{{editAccesorio.acc_status}}" class="form-control" id="status" name="status" [(ngModel)]="editAccesorio.acc_status" /> -->
+
+
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn estilosBotonesHover estilosBotones">
+                                Enviar
+                            </button>
+
+                        </div>
+                    </div>
+
+                </form>
 
             </div>
 

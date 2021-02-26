@@ -2,10 +2,10 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <button type="button" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
-              </svg> Descargar a excel</button>
 
+            <form class="form-inline my-2 my-lg-0">
+                <input #input (keyup)="buscarPersonal(input.value)" class="form-control me-5" type="search" placeholder="Buscar" aria-label="Search">
+            </form>
         </div>
         <div class="col">
             <h1 class="encabezado pp">
@@ -30,11 +30,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let per of personal | paginate: { itemsPerPage: 7, currentPage: page }">
+            <tr *ngFor="let per of personal | paginate: { itemsPerPage: 10, currentPage: page }">
+                <a href="# " class="float-right negro " data-target="#actuPer " data-toggle="modal" data-whatever="@mdo">
 
-                <td><button type="button" class="btn btn-outline-dark"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pen" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <td><button (click)="obtenerPerUni(per)" type="button" class="btn btn-outline-dark"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pen" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M13.498.795l.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
               </svg></button></td>
+                </a>
 
                 <td><button (click)="eliminarPersonal(per)" type="button" class="btn btn-outline-danger"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
@@ -51,7 +53,9 @@
     <pagination-controls (pageChange)="page = $event" previousLabel="«" nextLabel="»" class="color" class="custom-pagination pp"></pagination-controls>
 
 </div>
-
+<button (click)="generarExcel()" type="button" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
+  </svg> Descargar a excel</button>
 <!-- modal crear personal -->
 
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="addPer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -73,6 +77,54 @@
                         <input type="text" class="form-control" id="personal_nombre" name="personal_nombre" [(ngModel)]="nuevoPersonal.personal_nombre" />
                         <label for="recipient-name" class="col-form-label">Ingresa el apellido del personal</label>
                         <input type="text" class="form-control" id="personal_apellidos" name="personal_apellidos" [(ngModel)]="nuevoPersonal.personal_apellidos" />
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn estilosBotonesHover estilosBotones">
+                                Enviar
+                            </button>
+
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- modal actualizar accesorio -->
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="actuPer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bgCorp">
+                <a></a>
+                <h2 id="exampleModalLabel">
+                    Actualizar personal
+                </h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="actualizarPersonal(fPer)" #fPer="ngForm">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">ID del personal</label>
+                        <input type="text" disabled value="{{editPersonal.id_personal}}" class="form-control" id="id_personal_Per" name="id_personal_Per" [(ngModel)]="editPersonal.id_personal" />
+                        <!-- <input type="text" class="form-control" id="id_servicio" name="id_servicio" [(ngModel)]="nuevoAccesorio.fk_id_servicio" /> -->
+                        <label for="recipient-name" class="col-form-label">Ingrese nombre </label>
+                        <input type="text" value="{{editPersonal.personal_nombre}}" class="form-control" id="nombre_per" name="nombre_per" [(ngModel)]="editPersonal.personal_nombre" />
+
+                        <!-- <input type="text" class="form-control" id="id_area" name="id_area" [(ngModel)]="nuevoAccesorio.fk_id_area" /> -->
+                        <label for="recipient-name" class="col-form-label">Ingrese apellidos</label>
+                        <input type="text" value="{{editPersonal.personal_apellidos}}" class="form-control" id="apellidos_Per" name="apellidos_Per" [(ngModel)]="editPersonal.personal_apellidos" />
+
+
+                        <!-- <input type="text" value="{{editAccesorio.acc_status}}" class="form-control" id="status" name="status" [(ngModel)]="editAccesorio.acc_status" /> -->
+
+
 
                         <div class="modal-footer">
                             <button type="submit" class="btn estilosBotonesHover estilosBotones">

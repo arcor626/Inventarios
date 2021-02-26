@@ -13,4 +13,10 @@ export class Hardware{
     fk_id_area:           string;
     hwd_comentarios:      string;
     hwd_status: string;
+
+    nombre_proveedor: string;
+    serv_nombre: string;
+    nombre_encargado: string;
+    nombre_encargado_anterior: string;
+    area_nombre: string;
 }

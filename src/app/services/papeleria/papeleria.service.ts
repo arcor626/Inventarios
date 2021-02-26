@@ -45,6 +45,15 @@ export class PapeleriaService {
     );
   }
 
+  buscarPapeleria(termino: string){
+    return this.http.get(URL_SERVICIOS + 'papeleria/buscar/' + termino).pipe(
+      map((resp: any) => {        
+
+        return resp.papeleria;
+      })
+    );
+  }
+
   eliminaPapeleria(id: string){
     return this.http.delete(URL_SERVICIOS + 'papeleria/' + id).pipe(
       map((resp: any) => {
@@ -57,4 +66,31 @@ export class PapeleriaService {
       })
     );
   }
+
+  actualizaPapeleria(pape: Papeleria){
+    return this.http.put(URL_SERVICIOS + 'papeleria/' + pape.id_papeleria, pape).pipe(
+      map((resp: any) => {
+        Swal.fire("Papeleria actualizada", pape.id_papeleria, "success");
+        
+        
+        return  true;
+      })
+    );
+  }
+
+  agregarPieza(pieza : Papeleria){
+  return  this.http.put(URL_SERVICIOS + 'papeleria/agregar/' + pieza.id_papeleria, pieza).pipe(
+      map((resp: any) => {        
+        return  true;
+      })
+    );
+  }
+
+  quitarPieza(pieza : Papeleria){
+    return  this.http.put(URL_SERVICIOS + 'papeleria/quitar/' + pieza.id_papeleria, pieza).pipe(
+        map((resp: any) => {        
+          return  true;
+        })
+      );
+    }
 }

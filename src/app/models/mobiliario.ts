@@ -9,4 +9,9 @@ export class Mobiliario{
     fk_id_area: string;
     mob_comentarios: string;
     mob_status: string;
+
+    nombre_proveedor: string;
+    serv_nombre: string;
+    nombre_encargado: string;
+    area_nombre: string;
 }

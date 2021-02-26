@@ -2,6 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { Papeleria } from 'src/app/models/papeleria';
 import { PapeleriaService } from '../../../services/papeleria/papeleria.service';
 import Swal from 'sweetalert2';
+import * as XLSX from 'xlsx';
 import {NgForm } from '@angular/forms';
 import { ProveedorService } from '../../../services/proveedor/proveedor.service';
 import { AreasService } from '../../../services/areas/areas.service';
@@ -63,9 +64,7 @@ import { Marcas } from '../../../models/marcas';
   
     }
   
-    statusSeleccionado(id: number){
-      this.editPapeleria.pape_status = id.toString();  
-    }
+    
 
     // tslint:disable-next-line: typedef
     cargarPapeleria(){
@@ -111,10 +110,7 @@ import { Marcas } from '../../../models/marcas';
         return;
       } 
       // console.log(this.nuevoAccesorio);   
-      this._papeService.crearPapeleria(this.nuevaPapeleria).subscribe(
-        resultado =>{      
-        }
-        );  
+      this._papeService.crearPapeleria(this.nuevaPapeleria).subscribe( () => this.cargarPapeleria());  
     }
 
     crearProveedor(form : NgForm){
@@ -151,5 +147,59 @@ import { Marcas } from '../../../models/marcas';
           Swal.fire('Cancelado','','info');
         }
       });
+    }
+
+    actualizarPapeleria(form : NgForm){
+
+      if(form.invalid){
+        console.log("Formularo invalido");
+        
+      }   
+       
+    this._papeService.actualizaPapeleria(this.editPapeleria).subscribe(  () => this.cargarPapeleria());
+  
+    
+      }
+  
+  
+  
+  
+      obtenerPapeUni(papeleria:  Papeleria){
+            this.editPapeleria = papeleria;
+        
+        }
+
+    generarExcel(){
+      const workBook = XLSX.utils.book_new(); // create a new blank book
+      const workSheet = XLSX.utils.json_to_sheet(this.papelerias);
+  
+      XLSX.utils.book_append_sheet(workBook, workSheet, 'Papeleria'); // add the worksheet to the book
+      let fecha = new Date().getDate() + '-' + new Date().getMonth()+1 + '-' + new Date().getFullYear();
+      let nombre = fecha + '.xlsx'
+      XLSX.writeFile(workBook, nombre); // initiate a file download in browser
+    }
+
+    buscarPapeleria(termino: string) {
+      if (termino.length <= 0) {
+        this.cargarPapeleria();
+        return;
+      }           
+      this._papeService.buscarPapeleria(termino)
+        .subscribe((papeleria: Papeleria[]) => this.papelerias = papeleria);
+    
+  
+    }
+
+    agregar( papeleria : Papeleria){
+        console.log("Estas agregando");
+        this._papeService.agregarPieza(papeleria).subscribe( ()=> this.cargarPapeleria() );
+        
+
+    }
+
+    quitar(papeleria : Papeleria){
+        console.log("Estas quitando");
+        this._papeService.quitarPieza(papeleria).subscribe( ()=> this.cargarPapeleria() );
+
     }
   }

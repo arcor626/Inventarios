@@ -11,19 +11,20 @@ import { PapeleriaComponent } from './components/pages/papeleria/papeleria.compo
 import { InsumosComponent } from './components/pages/insumos/insumos.component';
 import { SidenavComponent } from './components/pages/sidenav/sidenav.component';
 import { PersonalComponent } from './components/pages/personal/personal.component';
+import { CanActivateViaAuthGuardGuard } from './services/guards/can-activate-via-auth-guard.guard';
 
 const routes: Routes = [
   {path: 'Login', component: LoginComponent},
-  {path: 'Dashboard', component: DashboardComponent},
-  {path: 'Mobiliario', component: MobiliarioComponent},
-  {path: 'Hardware', component: HardwareComponent},
-  {path: 'Comunicacion', component: ComunicacionComponent},
-  {path: 'Accesorios', component: AccesoriosComponent},
-  {path: 'Limpieza', component: LimpiezaComponent},
-  {path: 'Papeleria', component: PapeleriaComponent},
-  {path: 'Insumos', component: InsumosComponent},
-  {path: 'Side', component: SidenavComponent},
-  {path: 'Personal', component: PersonalComponent},
+  {path: 'Dashboard', component: DashboardComponent, canActivate: [CanActivateViaAuthGuardGuard] },
+  {path: 'Mobiliario', component: MobiliarioComponent, canActivate: [CanActivateViaAuthGuardGuard] },
+  {path: 'Hardware', component: HardwareComponent, canActivate: [CanActivateViaAuthGuardGuard] },
+  {path: 'Comunicacion', component: ComunicacionComponent, canActivate: [CanActivateViaAuthGuardGuard] },
+  {path: 'Accesorios', component: AccesoriosComponent, canActivate: [CanActivateViaAuthGuardGuard] },
+  {path: 'Limpieza', component: LimpiezaComponent, canActivate: [CanActivateViaAuthGuardGuard] },
+  {path: 'Papeleria', component: PapeleriaComponent, canActivate: [CanActivateViaAuthGuardGuard] },
+  {path: 'Insumos', component: InsumosComponent, canActivate: [CanActivateViaAuthGuardGuard] },
+  {path: 'Side', component: SidenavComponent, canActivate: [CanActivateViaAuthGuardGuard] },
+  {path: 'Personal', component: PersonalComponent, canActivate: [CanActivateViaAuthGuardGuard] },
 
   {path: '**', pathMatch: 'full', redirectTo: 'Login'}
 

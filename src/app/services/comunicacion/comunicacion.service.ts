@@ -47,6 +47,15 @@ export class ComunicacionService {
     );
   }
 
+  buscarComunicacion(termino: string){
+    return this.http.get(URL_SERVICIOS + 'comunicacion/buscar/' + termino).pipe(
+      map((resp: any) => {        
+
+        return resp.comunicacion;
+      })
+    );
+  }
+
   // tslint:disable-next-line: typedef
   eliminaComunicacion(id: string){
     return this.http.delete(URL_SERVICIOS + 'comunicacion/' + id).pipe(
@@ -60,4 +69,17 @@ export class ComunicacionService {
       })
     );
   }
+
+  actualizaComunicacion(com: Comunicacion){
+    console.log(com);
+    return this.http.put(URL_SERVICIOS + 'comunicacion/' + com.id_componente, com).pipe(
+      map((resp: any) => {
+        Swal.fire("Comunicacion actualizada", com.id_componente, "success");
+        
+        
+        return  true;
+      })
+    );
+  }
+
 }

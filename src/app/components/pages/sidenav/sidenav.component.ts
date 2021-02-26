@@ -2,6 +2,8 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Form, FormGroup, NgForm } from '@angular/forms';
 import { AccesorioService } from 'src/app/services/accesorios/accesorio.service';
+import { LoginService } from '../../../services/login.service';
+import { Router} from '@angular/router';
 
 
 @Component({
@@ -21,7 +23,9 @@ export class SidenavComponent implements OnInit {
   private _mobileQueryListener: () => void;
 
   constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, 
-    private _acceService: AccesorioService
+    private _acceService: AccesorioService,
+    private _loginService : LoginService,
+    public router: Router
     
     ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
@@ -46,5 +50,11 @@ export class SidenavComponent implements OnInit {
 
     console.log("me has presionado");
     
+  }
+  logOut(){
+    
+    this._loginService.logOut();
+    this.router.navigate(['/Login']);
+
   }
 }

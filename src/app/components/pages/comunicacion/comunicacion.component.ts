@@ -1,5 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import {NgForm } from '@angular/forms';
+import * as XLSX from 'xlsx';
+import Swal from 'sweetalert2';
 import { Comunicacion } from 'src/app/models/comunicacion';
 import { ComunicacionService } from '../../../services/comunicacion/comunicacion.service';
 import { ServiciosService } from '../../../services/servicios/servicios.service';
@@ -12,7 +14,6 @@ import { Personal } from '../../../models/personal';
 import { Areas } from '../../../models/areas';
 import {Servicios} from 'src/app/models/servicios';
 
-import Swal from 'sweetalert2';
 
 
 @Component({
@@ -26,6 +27,8 @@ import Swal from 'sweetalert2';
     proveedor: Proveedor[] = [];
     personal: Personal[] = [];
     areas: Areas[] = [];
+    editComunicacion = new Comunicacion();
+
 
     public page: number;
     nuevaComunicacion = new Comunicacion();
@@ -50,18 +53,29 @@ import Swal from 'sweetalert2';
 
   servicioSeleccionado(id: number){
     this.nuevaComunicacion.fk_id_servicio = id.toString();   
+    this.editComunicacion.fk_id_servicio = id.toString();   
   }
 
   proveedorSeleccionado(id: number){
     this.nuevaComunicacion.fk_id_proveedor = id.toString();   
+    this.editComunicacion.fk_id_proveedor = id.toString();   
+
   }
 
   encargadoSeleccionado(id: number){
-    this.nuevaComunicacion.fk_id_encargado = id.toString();   
+    this.nuevaComunicacion.fk_id_encargado = id.toString(); 
+    this.editComunicacion.fk_id_encargado = id.toString();   
+  
   }
 
   areaSeleccionada(id: number){
-    this.nuevaComunicacion.fk_id_area = id.toString();   
+    this.nuevaComunicacion.fk_id_area = id.toString();  
+    this.editComunicacion.fk_id_area = id.toString();   
+ 
+  }
+
+  statusSeleccionado(id: number){
+    this.editComunicacion.comp_status = id.toString();   
   }
 
   crearComunicacion(form : NgForm){
@@ -70,10 +84,7 @@ import Swal from 'sweetalert2';
       return; 
     } 
     // console.log(this.nuevoAccesorio);   
-    this._comService.crearComunicacion(this.nuevaComunicacion).subscribe(
-      resultado =>{      
-      }
-      );  
+    this._comService.crearComunicacion(this.nuevaComunicacion).subscribe( () => this.cargarComunicacion());  
   }
 
   crearServicio(form : NgForm){
@@ -170,5 +181,52 @@ import Swal from 'sweetalert2';
         Swal.fire('Cancelado','','info');
       }
     });
+  }
+
+  actualizarComunicacion(form : NgForm){
+
+    if(form.invalid){
+      console.log("Formularo invalido");
+      
+    }   
+     
+  this._comService.actualizaComunicacion(this.editComunicacion).subscribe(  () => this.cargarComunicacion());
+
+  
+    }
+
+
+
+
+    obtenerComUni(comunicacion:  Comunicacion){
+          this.editComunicacion = comunicacion;
+
+          if(this.editComunicacion.comp_fecha_asignacion == "No registrado"){
+
+            this.editComunicacion.comp_fecha_asignacion = null;
+          }
+          
+      
+      }
+
+  generarExcel(){
+    const workBook = XLSX.utils.book_new(); // create a new blank book
+    const workSheet = XLSX.utils.json_to_sheet(this.comunciaciones);
+
+    XLSX.utils.book_append_sheet(workBook, workSheet, 'Comunicacion'); // add the worksheet to the book
+    let fecha = new Date().getDate() + '-' + new Date().getMonth()+1 + '-' + new Date().getFullYear();
+    let nombre = fecha + '.xlsx'
+    XLSX.writeFile(workBook, nombre); // initiate a file download in browser
+  }
+
+  buscarComunicacion(termino: string) {
+    if (termino.length <= 0) {
+      this.cargarComunicacion();
+      return;
+    }           
+    this._comService.buscarComunicacion(termino)
+      .subscribe((comunicacion: Comunicacion[]) => this.comunciaciones = comunicacion);
+  
+
   }
 }

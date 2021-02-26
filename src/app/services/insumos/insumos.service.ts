@@ -46,6 +46,15 @@ export class InsumosService {
     );
   }
 
+  buscarInsumos(termino: string){
+    return this.http.get(URL_SERVICIOS + 'insumos/buscar/' + termino).pipe(
+      map((resp: any) => {        
+
+        return resp.insumos;
+      })
+    );
+  }
+
   eliminaInsumos(id: string){
     return this.http.delete(URL_SERVICIOS + 'insumos/' + id).pipe(
       map((resp: any) => {
@@ -58,4 +67,32 @@ export class InsumosService {
       })
     );
   }
+
+  actualizaInusmo(ins: Insumos){
+    console.log(ins);
+    return this.http.put(URL_SERVICIOS + 'insumos/' + ins.id_insumo, ins).pipe(
+      map((resp: any) => {
+        Swal.fire("Insumo actualizado", ins.id_insumo, "success");
+        
+        
+        return  true;
+      })
+    );
+  }
+
+  agregarPieza(pieza : Insumos){
+    return  this.http.put(URL_SERVICIOS + 'insumos/agregar/' + pieza.id_insumo, pieza).pipe(
+        map((resp: any) => {        
+          return  true;
+        })
+      );
+    }
+  
+    quitarPieza(pieza : Insumos){
+      return  this.http.put(URL_SERVICIOS + 'insumos/quitar/' + pieza.id_insumo, pieza).pipe(
+          map((resp: any) => {        
+            return  true;
+          })
+        );
+      }
 }

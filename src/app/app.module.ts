@@ -11,6 +11,7 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {MatMenuModule} from '@angular/material/menu';
 import { MatSliderModule } from '@angular/material/slider';
 import {NgxPaginationModule} from 'ngx-pagination'; // <-- import the module
+import {LOCALE_ID} from '@angular/core';
 
 import {HttpClient, HttpClientJsonpModule, HttpClientModule} from '@angular/common/http';
 
@@ -33,7 +34,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PersonalComponent } from './components/pages/personal/personal.component';
 
 
-
+import localeEs from '@angular/common/locales/es';
+import {registerLocaleData} from '@angular/common';
+registerLocaleData(localeEs, 'es');
 
 
 
@@ -73,7 +76,7 @@ import { PersonalComponent } from './components/pages/personal/personal.componen
     BrowserAnimationsModule,
     NgxPaginationModule,
   ],
-  providers: [],
+  providers: [{provide: LOCALE_ID, useValue: 'es'}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

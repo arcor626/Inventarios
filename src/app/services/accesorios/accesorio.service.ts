@@ -16,17 +16,17 @@ export class AccesorioService {
   crearAccesorio(accesorio: Accesorio){
     return this.http.post(URL_SERVICIOS + 'accesorios/', accesorio).pipe(
       map((resp: any) => {
-        // console.log(resp);
+        console.log(resp);
         if(!resp){
           Swal.fire(
             'Error al crear el accesorio',
-            'You clicked the button!',
+            'Id ingresado ya existe',
             'error'
           )
         }else{
           Swal.fire(
             'Se creo accesorio correctamente',
-            'You clicked the button!',
+            accesorio.id_accesorio,
             'success'
           )
         }
@@ -59,6 +59,15 @@ export class AccesorioService {
     );
   }
 
+  buscarAccesorio(termino: string){
+    return this.http.get(URL_SERVICIOS + 'accesorios/buscar/' + termino).pipe(
+      map((resp: any) => {        
+
+        return resp.accesorio;
+      })
+    );
+  }
+
   // tslint:disable-next-line: typedef
   eliminaAccesorio(id: string){
     return this.http.delete(URL_SERVICIOS + 'accesorios/' + id).pipe(
@@ -74,9 +83,12 @@ export class AccesorioService {
   }
 
   actualizaAccesorio(acce: Accesorio){
+    console.log(acce);
     return this.http.put(URL_SERVICIOS + 'accesorios/' + acce.id_accesorio, acce).pipe(
       map((resp: any) => {
         Swal.fire("Accesorio actualizado", acce.id_accesorio, "success");
+        
+        
         return  true;
       })
     );

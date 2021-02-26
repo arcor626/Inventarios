@@ -5,10 +5,12 @@ export class Papeleria{
   fk_id_proveedor:  string;
   fk_id_marca:   string;   
   pape_producto: string;   
-  pape_paq:     string;   
   pape_piezas:   string;   
-  pape_stock:    string;   
   fk_id_area:   string;    
   pape_comentarios: string;
-  pape_status:  string;    
+
+  nombre_proveedor: string;
+  area_nombre: string;
+  nombre_marca: string;
+
 }

@@ -1,9 +1,18 @@
 <div class="example-container" [class.example-is-mobile]="mobileQuery.matches" *ngIf="shouldRun">
     <mat-toolbar class="vertical-menu">
-        <button class="button" mat-icon-button (click)="snav.toggle()"><mat-icon class="button">menu</mat-icon></button>
-        <div class="paddings">
-            <img class="img-fluid rounded mx-auto d-block " src="../../assets/image/logoBlanco.png " alt="clicksoft " width="100% " height="100% " />
-        </div>
+        <button class="button" mat-icon-button (click)="snav.toggle()"><mat-icon class="button">menu</mat-icon></button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control me-5" type="search" placeholder="Buscar" aria-label="Search">
+        </form>
+
+
+
+        <p>
+            <br>
+
+            <img src="../../assets/image/logoBlanco.png " align="right" width="17% " height="17% " />
+        </p>
+
     </mat-toolbar>
 
     <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
@@ -105,7 +114,7 @@
                     </div>
                 </div>
                 <br><br><br><br><br>
-                <button type="button" class="btn btn-outline-danger btn-lg btn-block"> <a [routerLink]="['/Login']">Salir</a></button>
+                <button (click)="logOut()" type="button" class="btn btn-outline-danger btn-lg btn-block">Salir</button>
 
             </mat-nav-list>
         </mat-sidenav>

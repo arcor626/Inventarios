@@ -9,4 +9,10 @@ export class Comunicacion{
     comp_fecha_asignacion:string;
     fk_id_area: string;
     comp_comentarios: string;
+    comp_status: string;
+
+    nombre_proveedor: string;
+    serv_nombre: string;
+    nombre_encargado: string;
+    area_nombre: string;
 }

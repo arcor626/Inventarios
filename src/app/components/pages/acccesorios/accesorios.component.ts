@@ -3,6 +3,10 @@ import {NgForm } from '@angular/forms';
 import { Accesorio } from 'src/app/models/accesorios';
 import {Servicios} from 'src/app/models/servicios';
 import Swal from 'sweetalert2';
+import * as moment from 'moment';
+
+
+import * as XLSX from 'xlsx';
 import { AccesorioService } from '../../../services/accesorios/accesorio.service';
 import { ServiciosService } from '../../../services/servicios/servicios.service';
 import { ProveedorService } from '../../../services/proveedor/proveedor.service';
@@ -84,10 +88,10 @@ import { Areas } from '../../../models/areas';
       return;
     } 
     // console.log(this.nuevoAccesorio);   
-    this._acceService.crearAccesorio(this.nuevoAccesorio).subscribe(
-      resultado =>{      
-      }
-      );  
+    this._acceService.crearAccesorio(this.nuevoAccesorio).subscribe( () => this.cargarAccesorios())  
+
+    
+      // this.cargarAccesorios()
   }
 
   crearServicio(form : NgForm){
@@ -125,6 +129,7 @@ import { Areas } from '../../../models/areas';
 
       resultado =>{
         this.accesorios = resultado;
+        
       }
     );
   }
@@ -193,26 +198,55 @@ import { Areas } from '../../../models/areas';
     if(form.invalid){
       console.log("Formularo invalido");
       
-    }
+    }   
+     
   this._acceService.actualizaAccesorio(this.editAccesorio).subscribe(  () => this.cargarAccesorios());
+
+  console.log(this.editAccesorio);
+  
     }
 
 
 
 
-    obtenerAcceUni(id : string){
-      
-      this._acceService.obtenAccesorioUnico(id).subscribe(
+    obtenerAcceUni(accesorio:  Accesorio){
+          this.editAccesorio = accesorio;
 
-        resultado =>{
-          this.editAccesorio = resultado;
-        }
-      );
+          if(this.editAccesorio.acc_fecha_asignacion == "No registrado"){
+
+            this.editAccesorio.acc_fecha_asignacion = null;
+          }
+          console.log(this.editAccesorio);
+          
+      
       }
 
       
-      
+      generarExcel(){
+        const workBook = XLSX.utils.book_new(); // create a new blank book
+        const workSheet = XLSX.utils.json_to_sheet(this.accesorios);
+    
+        let myDate = new Date();
+        let dia = myDate.getMonth() + 1;
+        XLSX.utils.book_append_sheet(workBook, workSheet, 'Accesorios'); // add the worksheet to the book
+        let fecha = myDate.getDate() + '-' + dia + '-' + myDate.getFullYear();
+        let nombre = 'Accesorios ' + fecha + '.xlsx';
+         XLSX.writeFile(workBook, nombre); // initiate a file download in browser
 
+        
+        
+      }
+
+        buscarAccesorio(termino: string) {
+          if (termino.length <= 0) {
+            this.cargarAccesorios();
+            return;
+          }           
+          this._acceService.buscarAccesorio(termino)
+            .subscribe((accesorios: Accesorio[]) => this.accesorios = accesorios);
+        
+      
+        }
   }
 
  

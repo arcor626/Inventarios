@@ -1,6 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import { Insumos } from 'src/app/models/insumos';
 import { InsumosService } from '../../../services/insumos/insumos.service';
+import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
 import {NgForm } from '@angular/forms';
 import { ProveedorService } from '../../../services/proveedor/proveedor.service';
@@ -60,9 +61,7 @@ import { Marcas } from '../../../models/marcas';
   
     }
   
-    statusSeleccionado(id: number){
-      this.editInsumos.ins_status = id.toString();  
-    }
+
     // tslint:disable-next-line: typedef
     cargarInsumos(){
       this._insService.obtenerInsumos().subscribe(
@@ -107,11 +106,7 @@ import { Marcas } from '../../../models/marcas';
         return; 
       } 
       console.log(this.nuevoInsumo);   
-      this._insService.crearInsumos(this.nuevoInsumo).subscribe(
-
-        resultado =>{      
-        }
-        );  
+      this._insService.crearInsumos(this.nuevoInsumo).subscribe( () => this.cargarInsumos());  
     }
 
     crearProveedor(form : NgForm){
@@ -149,4 +144,55 @@ import { Marcas } from '../../../models/marcas';
         }
       });
     }
+
+    actualizarInsumos(form : NgForm){
+
+      if(form.invalid){
+        console.log("Formularo invalido");
+        
+      }   
+       
+    this._insService.actualizaInusmo(this.editInsumos).subscribe(  () => this.cargarInsumos());
+  
+    
+      }
+ 
+      obtenerInsUni(insumo:  Insumos){
+            this.editInsumos = insumo;
+        
+        }
+
+    generarExcel(){
+      const workBook = XLSX.utils.book_new(); // create a new blank book
+      const workSheet = XLSX.utils.json_to_sheet(this.insumo);
+  
+      XLSX.utils.book_append_sheet(workBook, workSheet, 'Insumo'); // add the worksheet to the book
+      let fecha = new Date().getDate() + '-' + new Date().getMonth()+1 + '-' + new Date().getFullYear();
+      let nombre = fecha + '.xlsx'
+      XLSX.writeFile(workBook, nombre); // initiate a file download in browser
+    }
+
+    buscarInsumos(termino: string) {
+      if (termino.length <= 0) {
+        this.cargarInsumos();
+        return;
+      }           
+      this._insService.buscarInsumos(termino)
+        .subscribe((insumos: Insumos[]) => this.insumo = insumos);
+    
+  
+    }
+
+    agregar( insumos : Insumos){
+      console.log("Estas agregando");
+      this._insService.agregarPieza(insumos).subscribe( ()=> this.cargarInsumos() );
+      
+
+  }
+
+  quitar(insumos : Insumos){
+      console.log("Estas quitando");
+      this._insService.quitarPieza(insumos).subscribe( ()=> this.cargarInsumos() );
+
+  }
   }

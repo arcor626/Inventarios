@@ -2,9 +2,9 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <button type="button" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
-              </svg> Descargar a excel</button>
+            <form class="form-inline my-2 my-lg-0">
+                <input #input (keyup)="buscarPapeleria(input.value)" class="form-control me-5" type="search" placeholder="Buscar" aria-label="Search">
+            </form>
 
         </div>
         <div class="col">
@@ -29,37 +29,34 @@
                 <th>Fecha de compra</th>
                 <th>Proveedor</th>
                 <th>Marca</th>
-                <th>Bien o Servicio Proporcionado</th>
-                <th>Paq</th>
-                <th>Piezas</th>
-                <th>Stock</th>
+                <th>Producto</th>
+                <th>Piezas totales &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; </th>
                 <th>Área</th>
                 <th>Comentarios</th>
-                <th>Estatus</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let papeleria of papelerias | paginate: { itemsPerPage: 6, currentPage: page }">
-
-                <td><button type="button" class="btn btn-outline-dark"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pen" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <tr *ngFor="let papeleria of papelerias | paginate: { itemsPerPage: 10, currentPage: page }">
+                <a href="# " class="float-right negro " data-target="#actuPape " data-toggle="modal" data-whatever="@mdo">
+                    <td><button (click)="obtenerPapeUni(papeleria)" type="button" class="btn btn-outline-dark"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pen" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M13.498.795l.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
               </svg></button></td>
-
+                </a>
                 <td><button (click)="eliminarPapeleria(papeleria)" type="button" class="btn btn-outline-danger"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
                 <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
               </svg></button></td>
                 <td>{{papeleria.id_papeleria}}</td>
-                <td>{{papeleria.ins_fecha_compra}}</td>
+                <td *ngIf="papeleria.pape_fecha_compra == 'No registrado'">{{papeleria.pape_fecha_compra}} </td>
+                <td *ngIf="papeleria.pape_fecha_compra !== 'No registrado'">{{papeleria.pape_fecha_compra | date}} </td>
                 <td>{{papeleria.nombre_proveedor}}</td>
                 <td>{{papeleria.nombre_marca}}</td>
                 <td>{{papeleria.pape_producto}}</td>
-                <td>{{papeleria.pape_paq}}</td>
-                <td>{{papeleria.pape_piezas}}</td>
-                <td>{{papeleria.pape_stock}}</td>
+                <td><button (click)="quitar(papeleria)" type="button" class="btn btn-light">-</button> {{papeleria.pape_piezas}}
+                    <button (click)="agregar(papeleria)" type="button" class="btn btn-light">+</button>
+                </td>
                 <td>{{papeleria.area_nombre}}</td>
                 <td>{{papeleria.pape_comentarios}}</td>
-                <td>{{papeleria.pape_status}}</td>
             </tr>
 
         </tbody>
@@ -68,6 +65,10 @@
 
 </div>
 
+
+<button (click)="generarExcel()" type="button" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
+  </svg> Descargar a excel</button>
 <!-- modal agregar papeleria -->
 
 <div class="modal fade" data-backdrop="static" data-keyboard="false" id="addPape" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -85,14 +86,14 @@
             <div class="modal-body">
                 <form (ngSubmit)="crearPapeleria(f)" #f="ngForm">
                     <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Ingresa el ID</label>
+                        <label for="recipient-name" class="col-form-label">Ingresa el ID*</label>
                         <input type="text" class="form-control textarea " id="id_papeleria" name="id_papeleria" [(ngModel)]="nuevaPapeleria.id_papeleria" required />
                         <small *ngIf="f.submitted && f.controls['id_papeleria'].errors " class="text-danger">
                             Campo obligatorio
                             <br> 
                         </small>
 
-                        <label for="recipient-name" class="col-form-label">Ingrese la fecha de compra</label>
+                        <label for="recipient-name" class="col-form-label">Ingrese la fecha de compra*</label>
                         <input type="date" class="form-control" id="fecha_compra" name="fecha_compra" [(ngModel)]="nuevaPapeleria.pape_fecha_compra" required />
                         <small *ngIf="f.submitted && f.controls['fecha_compra'].errors " class="text-danger">
                             Campo obligatorio
@@ -100,11 +101,10 @@
                         </small>
 
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Ingrese proveedor</label>
+                            <label for="recipient-name" class="col-form-label">Ingrese proveedor*</label>
                             <!-- <select (change)="proveedorSeleccionado($event.target.value)" class="custom-select" id="inputGroupSelect02" name="proveedor"> -->
                             <select class="form-control" id="proveedor" name="proveedor" [(ngModel)]="nuevaPapeleria.fk_id_proveedor">
                            
-                            <option selected>Selecciona un proveedor...</option>
 
                             <option *ngFor="let prove of proveedor" value="{{prove.id_proveedor}}" >{{prove.nombre_proveedor}}</option>
                            
@@ -118,11 +118,10 @@
 
                         <div class="form-group">
 
-                            <label for="recipient-name" class="col-form-label">Selecciona la marca</label>
+                            <label for="recipient-name" class="col-form-label">Selecciona la marca*</label>
                             <!-- <select (change)="marcaSeleccionada($event.target.value)" class="custom-select" id="inputGroupSelect01"> -->
                             <select class="form-control" id="marca" name="marca" [(ngModel)]="nuevaPapeleria.fk_id_marca">
                            
-                            <option selected>Selecciona una marca...</option>
 
                             <option *ngFor="let marca of marcas" 
                                 [value]="marca.id_marca">{{marca.marca_nombre}}
@@ -134,42 +133,34 @@
                             <br> 
                         </small>
                         </div>
-                        <a href="# " class="float-right negro " data-target="#addMar" data-toggle="modal" data-whatever="@mdo">Agregar nueva marca</a>
-                        <label for="recipient-name" class="col-form-label">Ingrese paq </label>
-                        <input type="text" class="form-control" id="paq" name="paq" [(ngModel)]="nuevaPapeleria.pape_paq" required />
-                        <small *ngIf="f.submitted && f.controls['paq'].errors " class="text-danger">
-                            Campo obligatorio
-                            <br> 
-                        </small>
 
-                        <label for="recipient-name" class="col-form-label">Ingrese producto </label>
+                        <label for="recipient-name" class="col-form-label">Ingrese producto* </label>
                         <input type="text" class="form-control" id="producto" name="producto" [(ngModel)]="nuevaPapeleria.pape_producto" required />
                         <small *ngIf="f.submitted && f.controls['producto'].errors " class="text-danger">
                             Campo obligatorio
                             <br> 
                         </small>
 
-                        <label for="recipient-name" class="col-form-label">Ingrese pieza </label>
+
+
+
+
+
+                        <label for="recipient-name" class="col-form-label">Ingrese pieza* </label>
                         <input type="text" class="form-control" id="piezas" name="piezas" [(ngModel)]="nuevaPapeleria.pape_piezas" required />
                         <small *ngIf="f.submitted && f.controls['piezas'].errors " class="text-danger">
                             Campo obligatorio
                             <br> 
                         </small>
 
-                        <label for="recipient-name" class="col-form-label">Ingrese stock </label>
-                        <input type="text" class="form-control" id="stock" name="stock" [(ngModel)]="nuevaPapeleria.pape_stock" required />
-                        <small *ngIf="f.submitted && f.controls['stock'].errors " class="text-danger">
-                            Campo obligatorio
-                            <br> 
-                        </small>
+
 
                         <div class="form-group">
 
-                            <label for="recipient-name" class="col-form-label">Ingrese el id de area </label>
+                            <label for="recipient-name" class="col-form-label">Selecciona el area* </label>
                             <!-- <select (change)="areaSeleccionada($event.target.value)" class="custom-select" id="inputGroupSelect04" name="area"> -->
                             <select class="form-control" id="area" name="area" [(ngModel)]="nuevaPapeleria.fk_id_area">
                             
-                            <option selected>Selecciona un area...</option>
 
                             <option *ngFor="let are of areas" value="{{are.id_area}}" >{{are.area_nombre}}</option>
                            
@@ -190,6 +181,9 @@
                             </button>
 
                         </div>
+
+                        <label for="recipient-name" class="col-form-label">Campos obligatorios*</label>
+
                     </div>
 
                 </form>
@@ -234,6 +228,83 @@
 
                     </form>
                 </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- modal actualizar accesorio -->
+
+<div class="modal fade" data-backdrop="static" data-keyboard="false" id="actuPape" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bgCorp">
+                <a></a>
+                <h2 id="exampleModalLabel">
+                    Actualizar papeleria
+                </h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="actualizarPapeleria(fPap)" #fPap="ngForm">
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">ID de la papeleria</label>
+                        <input type="text" disabled value="{{editPapeleria.id_papeleria}}" class="form-control" id="id_papeleria_Pap" name="id_papeleria_Pap" [(ngModel)]="editPapeleria.id_papeleria" />
+                        <label for="recipient-name" class="col-form-label">Fecha de compra</label>
+                        <input type="date" value="{{editPapeleria.pape_fecha_compra}}" class="form-control" id="fecha_compra_Pap" name="fecha_compra_Pap" [(ngModel)]="editPapeleria.pape_fecha_compra" disabled/>
+                        <label for="recipient-name" class="col-form-label">Ingrese proveedor</label>
+                        <select (change)="proveedorSeleccionado($event.target.value)" class="custom-select" id="inputGroupSelect02Acc">
+                            <option value="editPapeleria.fk_id_proveedor" selected>{{editPapeleria.nombre_proveedor}}</option>
+
+                            <option *ngFor="let prove of proveedor" value="{{prove.id_proveedor}}" >{{prove.nombre_proveedor}}</option>
+                           
+                          </select>
+                        <!-- <input type="text" class="form-control" id="provedor" name="provedor" [(ngModel)]="nuevoAccesorio.fk_id_proveedor" /> -->
+                        <label for="recipient-name" class="col-form-label">Ingrese su marca</label>
+                        <select (change)="marcaSeleccionada($event.target.value)" class="custom-select" id="inputGroupSelect03Acc">
+                            <option value="editPapeleria.fk_id_marca" selected>{{editPapeleria.nombre_marca}}</option>
+
+                            <option *ngFor="let marca of marcas " value ="{{marca.id_marca}}" >{{marca.marca_nombre}}</option>
+                           
+                          </select>
+
+                        <label for="recipient-name" class="col-form-label">Ingrese el producto </label>
+                        <input type="text" value="{{editPapeleria.pape_producto}}" class="form-control" id="producto_Pap" name="producto_Pap" [(ngModel)]="editPapeleria.pape_producto" />
+
+
+                        <label for="recipient-name" class="col-form-label">Ingrese piezas </label>
+                        <input type="text" value="{{editPapeleria.pape_piezas}}" class="form-control" id="piezas_Pap" name="piezas_Pap" [(ngModel)]="editPapeleria.pape_piezas" />
+
+
+                        <label for="recipient-name" class="col-form-label">Seleccione el area </label>
+                        <select (change)="areaSeleccionada($event.target.value)" class="custom-select" id="inputGroupSelect04Acc">
+                            <option value="editPapeleria.area_nombre" selected>{{editPapeleria.area_nombre}}</option>
+
+                            <option *ngFor="let are of areas" value="{{are.id_area}}" >{{are.area_nombre}}</option>
+                           
+                          </select>
+                        <!-- <input type="text" class="form-control" id="id_area" name="id_area" [(ngModel)]="nuevoAccesorio.fk_id_area" /> -->
+                        <label for="recipient-name" class="col-form-label">Ingrese comentarios</label>
+                        <input type="text" value="{{editPapeleria.pape_comentarios}}" class="form-control" id="comentarios_Pap" name="comentarios_Pap" [(ngModel)]="editPapeleria.pape_comentarios" />
+
+
+                        <!-- <input type="text" value="{{editAccesorio.acc_status}}" class="form-control" id="status" name="status" [(ngModel)]="editAccesorio.acc_status" /> -->
+
+
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn estilosBotonesHover estilosBotones">
+                                Enviar
+                            </button>
+
+                        </div>
+                    </div>
+
+                </form>
 
             </div>
 
